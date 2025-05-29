@@ -1,4 +1,4 @@
-import { useRef, type FormEvent } from 'react';
+import { useRef, type FormEvent, type KeyboardEvent } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useParams } from 'react-router';
@@ -32,7 +32,20 @@ export default function InputChat() {
 
   return (
     <form onSubmit={handleSubmit} className="w-full relative">
-      <Textarea ref={ref} id="message" name="message" placeholder="Enter your message here..." autoComplete="off" className="resize-none w-full rounded-none rounded-b-xl" />
+      <Textarea
+        ref={ref}
+        id="message"
+        name="message"
+        placeholder="Enter your message here..."
+        autoComplete="off"
+        className="resize-none w-full rounded-none rounded-b-xl"
+        onKeyDown={(event: KeyboardEvent<HTMLTextAreaElement>) => {
+          if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            ref.current?.form?.requestSubmit();
+          }
+        }}
+      />
       <Button type="submit" variant="default" className="absolute top-3 right-5">
         <Send className="h-4 w-4" />
       </Button>
