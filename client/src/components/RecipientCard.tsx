@@ -3,11 +3,12 @@ import { IoIosArrowRoundBack } from 'react-icons/io';
 import { Link } from 'react-router';
 import type { RecipientType } from '@/types';
 import ChatAvatar from '@/components/ChatAvatar';
+import { bufferArrayToBase64 } from '@/lib/utils';
 
 export default function RecipientCard({ recipient }: { recipient: RecipientType }) {
   let avatar = undefined;
   if (recipient.avatar && recipient.avatar.data) {
-    const base64String = btoa(String.fromCharCode(...new Uint8Array(recipient.avatar.data)));
+    const base64String = bufferArrayToBase64(recipient.avatar.data);
     avatar = `data:image/jpeg;base64,${base64String}`;
   }
 
