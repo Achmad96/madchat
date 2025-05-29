@@ -1,4 +1,4 @@
-type ParticipantType = {
+type UserType = {
   id: string;
   username: string;
   display_name: string;
@@ -22,6 +22,6 @@ type ConversationType = {
   creator_id: string;
   created_at: Date;
   type_id: number;
-  recipients: Array<ParticipantType>;
+  recipients: Array<UserType>;
 };
-export type { ParticipantType, RecipientType, ConversationType };
+export type { UserType, RecipientType, ConversationType };

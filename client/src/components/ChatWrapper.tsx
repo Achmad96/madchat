@@ -6,7 +6,7 @@ import RecipientCard from './RecipientCard';
 import { useEffect, useState } from 'react';
 import { fetchData } from '@/services/FetchService';
 import { useAuth } from '@/contexts/AuthContext';
-import type { ConversationType, ParticipantType, RecipientType } from '@/types';
+import type { ConversationType, UserType, RecipientType } from '@/types';
 
 export default function ChatWrapper() {
   const [conversation, setConversation] = useState<ConversationType | null>(null);
@@ -24,7 +24,6 @@ export default function ChatWrapper() {
           throw new Error('No recipient data found');
         }
         setConversation(data);
-        console.log({ data });
       } catch (error: any) {
         toast.error('ERROR: ' + error.message);
         console.error('Failed to load recipient data:', error);
@@ -39,7 +38,7 @@ export default function ChatWrapper() {
   useEffect(() => {
     if (!conversation || !user) return;
     if (conversation.type_id === 1) {
-      const recipient = conversation.recipients.find((recipient: ParticipantType) => recipient.id !== user.id);
+      const recipient = conversation.recipients.find((recipient: UserType) => recipient.id !== user.id);
       if (!recipient) {
         throw new Error('Recipient not found in conversation');
       }
