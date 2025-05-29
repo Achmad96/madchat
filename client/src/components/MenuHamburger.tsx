@@ -1,29 +1,24 @@
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem, DropdownMenuGroup, DropdownMenuShortcut } from '@/components/ui/dropdown-menu';
-import { Cloud, Github, Keyboard, LifeBuoy, LogOut, Menu, Moon, Settings, Sun, User } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Link, useNavigate } from 'react-router';
-import { toast } from 'sonner';
-import { useCallback } from 'react';
-import { useTheme } from '@/components/theme-provider';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem, DropdownMenuGroup, DropdownMenuShortcut } from "@/components/ui/dropdown-menu";
+import { Cloud, Github, Keyboard, LifeBuoy, LogOut, Menu, Moon, Settings, Sun, User } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router";
+import { toast } from "sonner";
+import { useCallback } from "react";
+import { useTheme } from "@/components/theme-provider";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function MenuHamburger() {
-  const navigate = useNavigate();
+  const { logout } = useAuth();
   const { setTheme } = useTheme();
 
-  const handleLogout = useCallback(() => {
-    localStorage.removeItem('token');
-    toast.success('Logged out successfully');
-    navigate('/sign-in', { replace: true });
-  }, []);
-
   const handleThemeChange = useCallback(() => {
-    const currentTheme = localStorage.getItem('theme') || 'system';
-    const newTheme = currentTheme === 'light' ? 'dark' : currentTheme === 'dark' ? 'system' : 'light';
+    const currentTheme = localStorage.getItem("theme") || "system";
+    const newTheme = currentTheme === "light" ? "dark" : currentTheme === "dark" ? "system" : "light";
     setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
+    localStorage.setItem("theme", newTheme);
     toast.success(`Theme changed to ${newTheme}`, {
       duration: 2000,
-      position: 'bottom-right'
+      position: "bottom-right"
     });
   }, []);
 
@@ -78,7 +73,7 @@ export default function MenuHamburger() {
           <span>API</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleLogout}>
+        <DropdownMenuItem onClick={logout}>
           <LogOut />
           <span>Log out</span>
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>

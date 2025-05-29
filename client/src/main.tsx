@@ -9,6 +9,7 @@ import SignupPage from '@/components/SignUpPage';
 import PrimaryLayout from '@/PrimaryLayout';
 import ChatsPage from '@/components/ChatsPage';
 import ChatWrapper from '@/components/ChatWrapper';
+import { ProfileSettingsPage } from './components/ProfileSettingsPage';
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
           {
             path: 'chats/:conversationId',
             Component: ChatWrapper
+          },
+          {
+            path: 'profile',
+            Component: ProfileSettingsPage
           }
         ]
       }
