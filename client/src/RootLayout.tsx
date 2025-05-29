@@ -1,4 +1,4 @@
-import Providers from '@/providers/Providers';
+import Providers from '@/components/Providers';
 import { Outlet } from 'react-router';
 import { Toaster } from '@/components/ui/sonner';
 
