@@ -1,6 +1,6 @@
 const UserService = require('../services/UserService');
 const jwt = require('jsonwebtoken');
-const { SECRET_KEY } = require('../config/jwt');
+const { SECRET_KEY } = require('../configs/jwt');
 
 /**
  * Register a new user
