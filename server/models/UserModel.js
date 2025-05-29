@@ -1,6 +1,6 @@
-const { createConnection, closeConnection } = require('../database');
-const { v4: uuidv4 } = require('uuid');
-const bcrypt = require('bcrypt');
+const { createConnection, closeConnection } = require("../database");
+const { v4: uuidv4 } = require("uuid");
+const bcrypt = require("bcrypt");
 
 class UserModel {
   /**
@@ -14,7 +14,7 @@ class UserModel {
       const { username, password, display_name = null, avatar = null } = userData;
       const existingUser = await this.findByUsername(username);
       if (existingUser) {
-        throw new Error('Username already exists');
+        throw new Error("Username already exists");
       }
       const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -28,7 +28,7 @@ class UserModel {
       return this.findById(userId);
     } catch (error) {
       closeConnection(db);
-      console.error('Error creating user:', error);
+      console.error("Error creating user:", error);
       throw error;
     }
   }
@@ -41,12 +41,12 @@ class UserModel {
   static async findById(id) {
     const db = await createConnection();
     try {
-      const [rows] = await db.execute('SELECT id, username, display_name, avatar, created_at, updated_at FROM user WHERE id = ?', [id]);
+      const [rows] = await db.execute("SELECT id, username, display_name, avatar, created_at, updated_at FROM user WHERE id = ?", [id]);
       closeConnection(db);
       return rows.length ? rows[0] : null;
     } catch (error) {
       closeConnection(db);
-      console.error('Error finding user by ID:', error);
+      console.error("Error finding user by ID:", error);
       throw error;
     }
   }
@@ -59,13 +59,13 @@ class UserModel {
   static async findByUsername(username) {
     const db = await createConnection();
     try {
-      const [rows] = await db.execute('SELECT id, username, display_name, avatar, created_at, updated_at FROM user WHERE username = ?', [username]);
+      const [rows] = await db.execute("SELECT id, username, display_name, avatar, created_at, updated_at FROM user WHERE username = ?", [username]);
       closeConnection(db);
 
       return rows.length ? rows[0] : null;
     } catch (error) {
       closeConnection(db);
-      console.error('Error finding user by username:', error);
+      console.error("Error finding user by username:", error);
       throw error;
     }
   }
@@ -79,7 +79,7 @@ class UserModel {
   static async verifyCredentials(username, password) {
     const db = await createConnection();
     try {
-      const [rows] = await db.execute('SELECT id, username, password AS hashed_password, display_name, avatar, created_at, updated_at FROM user WHERE username = ?', [username]);
+      const [rows] = await db.execute("SELECT id, username, password AS hashed_password, display_name, avatar, created_at, updated_at FROM user WHERE username = ?", [username]);
 
       if (!rows.length) {
         return null;
@@ -94,7 +94,7 @@ class UserModel {
       return userWithoutPassword;
     } catch (error) {
       closeConnection(db);
-      console.error('Error verifying credentials:', error);
+      console.error("Error verifying credentials:", error);
       throw error;
     }
   }
@@ -109,24 +109,24 @@ class UserModel {
     const db = await createConnection();
     try {
       const { display_name, avatar } = userData;
-      let query = 'UPDATE user SET updated_at = current_timestamp()';
+      let query = "UPDATE user SET updated_at = current_timestamp()";
       const params = [];
       if (display_name !== undefined) {
-        query += ', display_name = ?';
+        query += ", display_name = ?";
         params.push(display_name);
       }
       if (avatar !== undefined) {
-        query += ', avatar = ?';
+        query += ", avatar = ?";
         params.push(avatar);
       }
-      query += ' WHERE id = ?';
+      query += " WHERE id = ?";
       params.push(id);
       await db.execute(query, params);
       closeConnection(db);
       return this.findById(id);
     } catch (error) {
       closeConnection(db);
-      console.error('Error updating user:', error);
+      console.error("Error updating user:", error);
       throw error;
     }
   }
@@ -142,12 +142,12 @@ class UserModel {
     try {
       const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
-      await db.execute('UPDATE user SET password = ?, updated_at = current_timestamp() WHERE id = ?', [hashedPassword, id]);
+      await db.execute("UPDATE user SET password = ?, updated_at = current_timestamp() WHERE id = ?", [hashedPassword, id]);
       closeConnection(db);
       return true;
     } catch (error) {
       closeConnection(db);
-      console.error('Error updating password:', error);
+      console.error("Error updating password:", error);
       throw error;
     }
   }
@@ -160,12 +160,12 @@ class UserModel {
   static async delete(id) {
     const db = await createConnection();
     try {
-      const [result] = await db.execute('DELETE FROM user WHERE id = ?', [id]);
+      const [result] = await db.execute("DELETE FROM user WHERE id = ?", [id]);
       closeConnection(db);
       return result.affectedRows > 0;
     } catch (error) {
       closeConnection(db);
-      console.error('Error deleting user:', error);
+      console.error("Error deleting user:", error);
       throw error;
     }
   }
@@ -178,12 +178,12 @@ class UserModel {
   static async search(query) {
     const db = await createConnection();
     try {
-      const [rows] = await db.execute('SELECT id, username, display_name, avatar, created_at, updated_at FROM user WHERE username LIKE ? OR display_name LIKE ?', [`%${query}%`, `%${query}%`]);
+      const [rows] = await db.execute("SELECT id, username, display_name, avatar, created_at, updated_at FROM user WHERE username LIKE ? OR display_name LIKE ?", [`%${query}%`, `%${query}%`]);
       closeConnection(db);
       return rows;
     } catch (error) {
       closeConnection(db);
-      console.error('Error searching users:', error);
+      console.error("Error searching users:", error);
       throw error;
     }
   }

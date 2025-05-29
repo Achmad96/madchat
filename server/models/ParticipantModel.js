@@ -1,4 +1,4 @@
-const { createConnection, closeConnection } = require('../database');
+const { createConnection, closeConnection } = require("../database");
 
 class ParticipantModel {
   /**
@@ -12,13 +12,13 @@ class ParticipantModel {
     const db = await createConnection();
     try {
       const { id, conversationId } = data;
-      const query = 'INSERT INTO participant (id, conversation_id) VALUES (?, ?)';
+      const query = "INSERT INTO participant (id, conversation_id) VALUES (?, ?)";
       await db.execute(query, [id, conversationId]);
       closeConnection(db);
       return data;
     } catch (error) {
       closeConnection(db);
-      console.error('Error adding participant:', error);
+      console.error("Error adding participant:", error);
       throw error;
     }
   }
@@ -46,7 +46,7 @@ class ParticipantModel {
       return participants;
     } catch (error) {
       closeConnection(db);
-      console.error('Error finding conversation participants:', error);
+      console.error("Error finding conversation participants:", error);
       throw error;
     }
   }
@@ -59,12 +59,12 @@ class ParticipantModel {
   static async findConversationsByUserId(userId) {
     const db = await createConnection();
     try {
-      const [rows] = await db.execute('SELECT conversation_id FROM participant WHERE id = ?', [userId]);
+      const [rows] = await db.execute("SELECT conversation_id FROM participant WHERE id = ?", [userId]);
       closeConnection(db);
       return rows.map((row) => row.conversation_id);
     } catch (error) {
       closeConnection(db);
-      console.error('Error finding user conversations:', error);
+      console.error("Error finding user conversations:", error);
       throw error;
     }
   }
@@ -78,12 +78,12 @@ class ParticipantModel {
   static async isUserInConversation(userId, conversationId) {
     const db = await createConnection();
     try {
-      const [rows] = await db.execute('SELECT COUNT(*) AS count FROM participant WHERE id = ? AND conversation_id = ?', [userId, conversationId]);
+      const [rows] = await db.execute("SELECT COUNT(*) AS count FROM participant WHERE id = ? AND conversation_id = ?", [userId, conversationId]);
       closeConnection(db);
       return rows[0].count > 0;
     } catch (error) {
       closeConnection(db);
-      console.error('Error checking user in conversation:', error);
+      console.error("Error checking user in conversation:", error);
       throw error;
     }
   }
@@ -97,12 +97,12 @@ class ParticipantModel {
   static async remove(conversationId, userId) {
     const db = await createConnection();
     try {
-      const [result] = await db.execute('DELETE FROM participant WHERE conversation_id = ? AND id = ?', [conversationId, userId]);
+      const [result] = await db.execute("DELETE FROM participant WHERE conversation_id = ? AND id = ?", [conversationId, userId]);
       closeConnection(db);
       return result.affectedRows > 0;
     } catch (error) {
       closeConnection(db);
-      console.error('Error removing participant:', error);
+      console.error("Error removing participant:", error);
       throw error;
     }
   }

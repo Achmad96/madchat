@@ -1,6 +1,6 @@
-const { ConversationService } = require('../services');
-const { ParticipantModel } = require('../models');
-const { response } = require('../utils/ResponseUtil');
+const { ConversationService } = require("../services");
+const { ParticipantModel } = require("../models");
+const { response } = require("../utils/ResponseUtil");
 
 /**
  * Create a new conversation
@@ -11,11 +11,11 @@ const createConversation = async (req, res) => {
     const creator_id = req.user.id;
 
     if (!participant_ids || !participant_ids.length) {
-      return response(res, 400, 'At least one participant is required');
+      return response(res, 400, "At least one participant is required");
     }
 
     const conversation = await ConversationService.createConversation({ creator_id, participant_ids });
-    const io = req.app.get('io');
+    const io = req.app.get("io");
     const allParticipants = [creator_id, ...participant_ids];
 
     for (const participantId of allParticipants) {
@@ -23,10 +23,10 @@ const createConversation = async (req, res) => {
       io.emit(`new-conversation-${participantId}`, userConversations);
     }
 
-    response(res, 201, 'Conversation created successfully', conversation);
+    response(res, 201, "Conversation created successfully", conversation);
   } catch (error) {
-    console.error('Error creating conversation:', error);
-    response(res, 500, 'Failed to create conversation');
+    console.error("Error creating conversation:", error);
+    response(res, 500, "Failed to create conversation");
   }
 };
 
@@ -36,12 +36,12 @@ const getConversationById = async (req, res) => {
     const userId = req.user.id;
     const conversation = await ConversationService.getConversationById(id, userId);
     if (!conversation) {
-      return response(res, 404, 'Conversation not found');
+      return response(res, 404, "Conversation not found");
     }
-    response(res, 200, 'Conversation retrieved successfully', conversation);
+    response(res, 200, "Conversation retrieved successfully", conversation);
   } catch (error) {
-    console.error('Error getting conversation by ID:', error);
-    response(res, 500, 'Failed to get conversation');
+    console.error("Error getting conversation by ID:", error);
+    response(res, 500, "Failed to get conversation");
   }
 };
 
@@ -53,12 +53,12 @@ const getUserConversations = async (req, res) => {
     const userId = req.user.id;
     const conversations = await ConversationService.getUserConversations(userId);
     if (!conversations || conversations.length === 0) {
-      return response(res, 404, 'No conversations found for this user');
+      return response(res, 404, "No conversations found for this user");
     }
-    return response(res, 200, 'User conversations retrieved successfully', conversations);
+    return response(res, 200, "User conversations retrieved successfully", conversations);
   } catch (error) {
-    console.error('Error getting user conversations:', error);
-    return response(res, 500, 'Failed to get conversations');
+    console.error("Error getting user conversations:", error);
+    return response(res, 500, "Failed to get conversations");
   }
 };
 
@@ -71,7 +71,7 @@ const sendMessage = async (req, res) => {
     const author_id = req.user.id;
 
     if (!conversation_id || !content) {
-      return response(res, 400, 'conversation_id and content are required');
+      return response(res, 400, "conversation_id and content are required");
     }
 
     const message = await ConversationService.createMessage({
@@ -80,7 +80,7 @@ const sendMessage = async (req, res) => {
       content
     });
 
-    const io = req.app.get('io');
+    const io = req.app.get("io");
     io.emit(`new-message-${conversation_id}`, message);
 
     const participants = await ParticipantModel.findByConversationId(conversation_id);
@@ -90,10 +90,10 @@ const sendMessage = async (req, res) => {
       io.emit(`new-notification-${participant.id}`, message);
     }
 
-    response(res, 201, 'Message sent successfully', message);
+    response(res, 201, "Message sent successfully", message);
   } catch (error) {
-    console.error('Error sending message:', error);
-    response(res, 500, 'Failed to send message');
+    console.error("Error sending message:", error);
+    response(res, 500, "Failed to send message");
   }
 };
 
@@ -104,10 +104,10 @@ const getConversationMessages = async (req, res) => {
   try {
     const { conversationId } = req.params;
     const messages = await ConversationService.getConversationMessages(conversationId);
-    response(res, 200, 'Messages retrieved successfully', messages);
+    response(res, 200, "Messages retrieved successfully", messages);
   } catch (error) {
-    console.error('Error getting conversation messages:', error);
-    response(res, 500, 'Failed to get messages');
+    console.error("Error getting conversation messages:", error);
+    response(res, 500, "Failed to get messages");
   }
 };
 
@@ -120,10 +120,10 @@ const deleteConversation = async (req, res) => {
     const userId = req.user.id;
 
     await ConversationService.deleteConversation(conversationId, userId);
-    response(res, 200, 'Conversation deleted successfully');
+    response(res, 200, "Conversation deleted successfully");
   } catch (error) {
-    console.error('Error deleting conversation:', error);
-    response(res, 500, 'Failed to delete conversation');
+    console.error("Error deleting conversation:", error);
+    response(res, 500, "Failed to delete conversation");
   }
 };
 

@@ -1,4 +1,4 @@
-const { ConversationModel, MessageModel, UserModel, ParticipantModel } = require('../models');
+const { ConversationModel, MessageModel, UserModel, ParticipantModel } = require("../models");
 
 class ConversationService {
   /**
@@ -13,13 +13,13 @@ class ConversationService {
       const { type_id = 1, creator_id, participant_ids } = data;
       const creator = await UserModel.findById(creator_id);
       if (!creator) {
-        throw new Error('Creator user does not exist');
+        throw new Error("Creator user does not exist");
       }
       const conversation = await ConversationModel.create({ typeId: type_id, creatorId: creator_id });
       await ParticipantModel.create({ id: creator_id, conversationId: conversation.id });
       if (type_id == 1) {
         if (participant_ids.length !== 1) {
-          throw new Error('For private conversations, exactly one participant is required');
+          throw new Error("For private conversations, exactly one participant is required");
         }
         await ParticipantModel.create({ id: participant_ids[0], conversationId: conversation.id });
         return this.getConversationById(conversation.id, creator_id);
@@ -40,7 +40,7 @@ class ConversationService {
       }
       return this.getConversationById(conversation.id, creator_id);
     } catch (error) {
-      console.error('Error in createConversation service:', error);
+      console.error("Error in createConversation service:", error);
       throw error;
     }
   }
@@ -59,7 +59,7 @@ class ConversationService {
       }
       return conversation;
     } catch (error) {
-      console.error('Error in getConversationById service:', error);
+      console.error("Error in getConversationById service:", error);
       throw error;
     }
   }
@@ -77,7 +77,7 @@ class ConversationService {
       }
       return conversations;
     } catch (error) {
-      console.error('Error in getUserConversations service:', error);
+      console.error("Error in getUserConversations service:", error);
       throw error;
     }
   }
@@ -95,16 +95,16 @@ class ConversationService {
       const { conversationId, authorId, content } = data;
       const conversation = await ConversationModel.findById(conversationId, authorId);
       if (!conversation) {
-        throw new Error('Conversation not found');
+        throw new Error("Conversation not found");
       }
       const participants = await ParticipantModel.findByConversationId(conversationId);
       const isParticipant = participants.some((participant) => participant.id === authorId);
       if (!isParticipant) {
-        throw new Error('User is not part of this conversation');
+        throw new Error("User is not part of this conversation");
       }
       return await MessageModel.create({ conversationId, authorId, content });
     } catch (error) {
-      console.error('Error in createMessage service:', error);
+      console.error("Error in createMessage service:", error);
       throw error;
     }
   }
@@ -120,7 +120,7 @@ class ConversationService {
     try {
       return await MessageModel.findByConversationId(conversationId, limit, offset);
     } catch (error) {
-      console.error('Error in getConversationMessages service:', error);
+      console.error("Error in getConversationMessages service:", error);
       throw error;
     }
   }
@@ -135,14 +135,14 @@ class ConversationService {
     try {
       const conversation = await ConversationModel.findById(conversationId);
       if (!conversation) {
-        throw new Error('Conversation not found');
+        throw new Error("Conversation not found");
       }
 
       const participants = await ParticipantModel.findByConversationId(conversationId);
       const isParticipant = participants.some((participant) => participant.id === userId);
 
       if (!isParticipant) {
-        throw new Error('User not authorized to delete this conversation');
+        throw new Error("User not authorized to delete this conversation");
       }
 
       for (const participant of participants) {
@@ -151,7 +151,7 @@ class ConversationService {
 
       return await ConversationModel.delete(id);
     } catch (error) {
-      console.error('Error in deleteConversation service:', error);
+      console.error("Error in deleteConversation service:", error);
       throw error;
     }
   }

@@ -1,5 +1,5 @@
-const { createConnection, closeConnection } = require('../database');
-const { v4: uuidv4 } = require('uuid');
+const { createConnection, closeConnection } = require("../database");
+const { v4: uuidv4 } = require("uuid");
 
 class ConversationModel {
   /**
@@ -13,7 +13,7 @@ class ConversationModel {
     try {
       const { typeId, creatorId } = data;
       const conversationId = uuidv4();
-      const query = 'INSERT INTO conversation (id, type_id, creator_id) VALUES (?, ?, ?)';
+      const query = "INSERT INTO conversation (id, type_id, creator_id) VALUES (?, ?, ?)";
       const result = await db.execute(query, [conversationId, typeId, creatorId]);
       closeConnection(db);
       return {
@@ -23,7 +23,7 @@ class ConversationModel {
       };
     } catch (error) {
       closeConnection(db);
-      console.error('Error creating conversation:', error);
+      console.error("Error creating conversation:", error);
       throw error;
     }
   }
@@ -72,7 +72,7 @@ class ConversationModel {
       return rows.length ? conversation : null;
     } catch (error) {
       closeConnection(db);
-      console.error('Error finding conversation by ID:', error);
+      console.error("Error finding conversation by ID:", error);
       throw error;
     }
   }
@@ -121,7 +121,7 @@ class ConversationModel {
       return conversations.length ? conversations : null;
     } catch (error) {
       closeConnection(db);
-      console.error('Error finding conversation by participants:', error);
+      console.error("Error finding conversation by participants:", error);
       throw error;
     }
   }
@@ -134,12 +134,12 @@ class ConversationModel {
   static async updateTimestamp(id) {
     const db = await createConnection();
     try {
-      await db.execute('UPDATE conversation SET updated_at = current_timestamp() WHERE id = ?', [id]);
+      await db.execute("UPDATE conversation SET updated_at = current_timestamp() WHERE id = ?", [id]);
       closeConnection(db);
       return true;
     } catch (error) {
       closeConnection(db);
-      console.error('Error updating conversation timestamp:', error);
+      console.error("Error updating conversation timestamp:", error);
       throw error;
     }
   }
@@ -152,13 +152,13 @@ class ConversationModel {
   static async delete(id) {
     const db = await createConnection();
     try {
-      await db.execute('DELETE FROM message WHERE conversation_id = ?', [id]);
-      const [result] = await db.execute('DELETE FROM conversation WHERE id = ?', [id]);
+      await db.execute("DELETE FROM message WHERE conversation_id = ?", [id]);
+      const [result] = await db.execute("DELETE FROM conversation WHERE id = ?", [id]);
       closeConnection(db);
       return result.affectedRows > 0;
     } catch (error) {
       closeConnection(db);
-      console.error('Error deleting conversation:', error);
+      console.error("Error deleting conversation:", error);
       throw error;
     }
   }
@@ -189,7 +189,7 @@ class ConversationModel {
       return rows;
     } catch (error) {
       closeConnection(db);
-      console.error('Error getting conversations with pagination:', error);
+      console.error("Error getting conversations with pagination:", error);
       throw error;
     }
   }

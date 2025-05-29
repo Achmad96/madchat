@@ -1,5 +1,5 @@
-const { UserModel } = require('../models');
-const bcrypt = require('bcrypt');
+const { UserModel } = require("../models");
+const bcrypt = require("bcrypt");
 
 class UserService {
   /**
@@ -12,7 +12,7 @@ class UserService {
       const { username, password, display_name, avatar } = userData;
       const existingUser = await UserModel.findByUsername(username);
       if (existingUser) {
-        throw new Error('Username already exists');
+        throw new Error("Username already exists");
       }
       return await UserModel.create({
         username,
@@ -21,7 +21,7 @@ class UserService {
         avatar
       });
     } catch (error) {
-      console.error('Error in createUser service:', error);
+      console.error("Error in createUser service:", error);
       throw error;
     }
   }
@@ -35,7 +35,7 @@ class UserService {
     try {
       return await UserModel.findById(id);
     } catch (error) {
-      console.error('Error in getUserById service:', error);
+      console.error("Error in getUserById service:", error);
       throw error;
     }
   }
@@ -49,7 +49,7 @@ class UserService {
     try {
       return await UserModel.findByUsername(username);
     } catch (error) {
-      console.error('Error in getUserByUsername service:', error);
+      console.error("Error in getUserByUsername service:", error);
       throw error;
     }
   }
@@ -64,7 +64,7 @@ class UserService {
     try {
       return await UserModel.update(id, userData);
     } catch (error) {
-      console.error('Error in updateUser service:', error);
+      console.error("Error in updateUser service:", error);
       throw error;
     }
   }
@@ -80,15 +80,15 @@ class UserService {
     try {
       const user = await UserModel.findById(id);
       if (!user) {
-        throw new Error('User not found');
+        throw new Error("User not found");
       }
       const verified = await UserModel.verifyCredentials(user.username, currentPassword);
       if (!verified) {
-        throw new Error('Current password is incorrect');
+        throw new Error("Current password is incorrect");
       }
       return await UserModel.updatePassword(id, newPassword);
     } catch (error) {
-      console.error('Error in changePassword service:', error);
+      console.error("Error in changePassword service:", error);
       throw error;
     }
   }
@@ -103,7 +103,7 @@ class UserService {
     try {
       return await UserModel.verifyCredentials(username, password);
     } catch (error) {
-      console.error('Error in authenticateUser service:', error);
+      console.error("Error in authenticateUser service:", error);
       throw error;
     }
   }
@@ -117,7 +117,7 @@ class UserService {
     try {
       return await UserModel.search(query);
     } catch (error) {
-      console.error('Error in searchUsers service:', error);
+      console.error("Error in searchUsers service:", error);
       throw error;
     }
   }

@@ -1,5 +1,5 @@
-const { createConnection, closeConnection } = require('../database');
-const { v4: uuidv4 } = require('uuid');
+const { createConnection, closeConnection } = require("../database");
+const { v4: uuidv4 } = require("uuid");
 
 class MessageModel {
   /**
@@ -17,12 +17,12 @@ class MessageModel {
       const messageId = uuidv4();
       const query = `INSERT INTO message (id, conversation_id, author_id, content) VALUES (?, ?, ?, ?)`;
       await db.execute(query, [messageId, conversationId, authorId, content]);
-      await db.execute('UPDATE conversation SET updated_at = current_timestamp() WHERE id = ?', [conversationId]);
+      await db.execute("UPDATE conversation SET updated_at = current_timestamp() WHERE id = ?", [conversationId]);
       closeConnection(db);
       return this.findById(messageId);
     } catch (error) {
       closeConnection(db);
-      console.error('Error creating message:', error);
+      console.error("Error creating message:", error);
       throw error;
     }
   }
@@ -46,7 +46,7 @@ class MessageModel {
       return rows.length ? rows[0] : null;
     } catch (error) {
       closeConnection(db);
-      console.error('Error finding message by ID:', error);
+      console.error("Error finding message by ID:", error);
       throw error;
     }
   }
@@ -73,7 +73,7 @@ class MessageModel {
       return rows;
     } catch (error) {
       closeConnection(db);
-      console.error('Error finding messages by conversation ID:', error);
+      console.error("Error finding messages by conversation ID:", error);
       throw error;
     }
   }
@@ -104,7 +104,7 @@ class MessageModel {
       return rows;
     } catch (error) {
       closeConnection(db);
-      console.error('Error getting latest messages for user:', error);
+      console.error("Error getting latest messages for user:", error);
       throw error;
     }
   }
@@ -120,17 +120,17 @@ class MessageModel {
     const db = await createConnection();
     try {
       const { content } = data;
-      await db.execute('UPDATE message SET content = ?, updated_at = current_timestamp() WHERE id = ?', [content, id]);
-      const [messageRows] = await db.execute('SELECT conversation_id FROM message WHERE id = ?', [id]);
+      await db.execute("UPDATE message SET content = ?, updated_at = current_timestamp() WHERE id = ?", [content, id]);
+      const [messageRows] = await db.execute("SELECT conversation_id FROM message WHERE id = ?", [id]);
       if (messageRows.length) {
         const { conversation_id } = messageRows[0];
-        await db.execute('UPDATE conversation SET updated_at = current_timestamp() WHERE id = ?', [conversation_id]);
+        await db.execute("UPDATE conversation SET updated_at = current_timestamp() WHERE id = ?", [conversation_id]);
       }
       closeConnection(db);
       return this.findById(id);
     } catch (error) {
       closeConnection(db);
-      console.error('Error updating message:', error);
+      console.error("Error updating message:", error);
       throw error;
     }
   }
@@ -143,17 +143,17 @@ class MessageModel {
   static async delete(id) {
     const db = await createConnection();
     try {
-      const [messageRows] = await db.execute('SELECT conversation_id FROM message WHERE id = ?', [id]);
-      const [result] = await db.execute('DELETE FROM message WHERE id = ?', [id]);
+      const [messageRows] = await db.execute("SELECT conversation_id FROM message WHERE id = ?", [id]);
+      const [result] = await db.execute("DELETE FROM message WHERE id = ?", [id]);
       if (result.affectedRows > 0 && messageRows.length) {
         const { conversation_id } = messageRows[0];
-        await db.execute('UPDATE conversation SET updated_at = current_timestamp() WHERE id = ?', [conversation_id]);
+        await db.execute("UPDATE conversation SET updated_at = current_timestamp() WHERE id = ?", [conversation_id]);
       }
       closeConnection(db);
       return result.affectedRows > 0;
     } catch (error) {
       closeConnection(db);
-      console.error('Error deleting message:', error);
+      console.error("Error deleting message:", error);
       throw error;
     }
   }
@@ -166,12 +166,12 @@ class MessageModel {
   static async countByConversationId(conversationId) {
     const db = await createConnection();
     try {
-      const [rows] = await db.execute('SELECT COUNT(*) as count FROM message WHERE conversation_id = ?', [conversationId]);
+      const [rows] = await db.execute("SELECT COUNT(*) as count FROM message WHERE conversation_id = ?", [conversationId]);
       closeConnection(db);
       return rows[0].count;
     } catch (error) {
       closeConnection(db);
-      console.error('Error counting messages:', error);
+      console.error("Error counting messages:", error);
       throw error;
     }
   }
