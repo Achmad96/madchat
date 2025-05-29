@@ -1,8 +1,8 @@
-import { ModeToggle } from '@/components/mode-toggle';
 import { Outlet } from 'react-router';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { NotificationProvider } from '@/contexts/NotificationContext';
 import { NotificationBadge } from '@/components/NotificationBadge';
+import MenuHamburger from '@/components/MenuHamburger';
 
 export default function PrimaryLayout() {
   return (
@@ -13,7 +13,7 @@ export default function PrimaryLayout() {
             <h2 className="text-2xl font-bold">MadChat</h2>
             <div className="flex items-center gap-10">
               <NotificationBadge />
-              <ModeToggle />
+              <MenuHamburger />
             </div>
           </div>
         </nav>
