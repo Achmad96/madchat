@@ -25,9 +25,14 @@ const FormSchema = z.object({
       message: 'Display name cannot exceed 30 characters.'
     })
     .optional(),
-  password: z.string().min(8, {
-    message: 'Password must be at least 8 characters.'
-  }),
+  password: z
+    .string()
+    .min(8, {
+      message: 'Password must be at least 8 characters.'
+    })
+    .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, {
+      message: 'Password must contain at least one letter and one number.'
+    }),
   avatar: z.instanceof(File).optional()
 });
 

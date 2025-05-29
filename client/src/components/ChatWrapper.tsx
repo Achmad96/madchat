@@ -1,12 +1,12 @@
-import ChatThread from '@/components/ChatThread';
-import ChatInput from '@/components/ChatInput';
-import { useNavigate, useParams } from 'react-router';
-import { toast } from 'sonner';
-import RecipientCard from './RecipientCard';
-import { useEffect, useState } from 'react';
-import { fetchData } from '@/services/FetchService';
-import { useAuth } from '@/contexts/AuthContext';
-import type { ConversationType, UserType, RecipientType } from '@/types';
+import ChatThread from "@/components/ChatThread";
+import ChatInput from "@/components/ChatInput";
+import { useNavigate, useParams } from "react-router";
+import { toast } from "sonner";
+import RecipientCard from "./RecipientCard";
+import { useEffect, useState } from "react";
+import { fetchData } from "@/services/FetchService";
+import { useAuth } from "@/contexts/AuthContext";
+import type { ConversationType, UserType, RecipientType } from "@/types";
 
 export default function ChatWrapper() {
   const [conversation, setConversation] = useState<ConversationType | null>(null);
@@ -18,21 +18,19 @@ export default function ChatWrapper() {
   useEffect(() => {
     const getRecipientData = async () => {
       try {
-        const response = await fetchData(`conversations/${conversationId}`, { method: 'GET' });
+        const response = await fetchData(`conversations/${conversationId}`, { method: "GET" });
         const { data } = await response.json();
         if (!data) {
-          throw new Error('No recipient data found');
+          throw new Error("No recipient data found");
         }
         setConversation(data);
       } catch (error: any) {
-        toast.error('ERROR: ' + error.message);
-        console.error('Failed to load recipient data:', error);
-        navigate('/chats', { replace: true });
+        toast.error("ERROR: " + error.message);
+        console.error("Failed to load recipient data:", error);
+        navigate("/chats", { replace: true });
       }
     };
-    if (user) {
-      getRecipientData();
-    }
+    getRecipientData();
   }, [user]);
 
   useEffect(() => {
@@ -40,7 +38,7 @@ export default function ChatWrapper() {
     if (conversation.type_id === 1) {
       const recipient = conversation.recipients.find((recipient: UserType) => recipient.id !== user.id);
       if (!recipient) {
-        throw new Error('Recipient not found in conversation');
+        throw new Error("Recipient not found in conversation");
       }
       const { id, username, display_name, avatar } = recipient;
       setRecipients([{ id, name: display_name || username, avatar }]);

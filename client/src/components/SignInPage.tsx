@@ -9,6 +9,7 @@ import { z } from 'zod';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { API_URL } from '@/configs/API';
+import { useAuth } from '@/contexts/AuthContext';
 
 const FormSchema = z.object({
   username: z.string().min(1, { message: 'Username is required' }),
@@ -19,6 +20,7 @@ type FormData = z.infer<typeof FormSchema>;
 
 export default function SignInPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const form = useForm<FormData>({
@@ -46,7 +48,7 @@ export default function SignInPage() {
         throw new Error(responseData.error || 'Login failed');
       }
 
-      localStorage.setItem('token', responseData.token);
+      login(responseData.user, responseData.token);
 
       toast.success('Login successful', {
         description: 'Welcome back!'
