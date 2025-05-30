@@ -1,8 +1,8 @@
-import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { socket } from '@/services/SocketService';
-import { toast } from 'sonner';
-import { useLocation, useNavigate } from 'react-router';
+import React, { createContext, useState, useContext, useEffect, useCallback } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { socket } from "@/services/SocketService";
+import { toast } from "sonner";
+import { useLocation, useNavigate } from "react-router";
 
 type NotificationType = {
   id: string;
@@ -25,7 +25,7 @@ const NotificationContext = createContext<NotificationContextType | null>(null);
 export const useNotifications = () => {
   const context = useContext(NotificationContext);
   if (!context) {
-    throw new Error('useNotifications must be used within a NotificationProvider');
+    throw new Error("useNotifications must be used within a NotificationProvider");
   }
   return context;
 };
@@ -45,10 +45,10 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
         return;
       }
       setNotifications((prev) => [...prev, message]);
-      toast(`New message from ${message.display_name || message.username || 'Someone'}`, {
+      toast(`New message from ${message.display_name || message.username || "Someone"}`, {
         description: message.content.length > 30 ? `${message.content.substring(0, 30)}...` : message.content,
         action: {
-          label: 'View',
+          label: "View",
           onClick: () => navigate(currentChatPage, { replace: true })
         }
       });

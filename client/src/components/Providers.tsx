@@ -1,5 +1,5 @@
-import { ThemeProvider } from '@/components/theme-provider';
-import { AuthProvider } from '@/contexts/AuthContext';
+import { ThemeProvider } from "@/components/theme-provider";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 function Providers({ children }: { children: React.ReactNode }) {
   return (

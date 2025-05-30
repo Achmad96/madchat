@@ -1,27 +1,27 @@
-import { createBrowserRouter, RouterProvider } from 'react-router';
+import { createBrowserRouter, RouterProvider } from "react-router";
 
-import '@/index.css';
-import ReactDOM from 'react-dom/client';
+import "@/index.css";
+import ReactDOM from "react-dom/client";
 
-import RootLayout from '@/RootLayout';
-import SignInPage from '@/components/SignInPage';
-import SignupPage from '@/components/SignUpPage';
-import PrimaryLayout from '@/PrimaryLayout';
-import ChatsPage from '@/components/ChatsPage';
-import ChatWrapper from '@/components/ChatWrapper';
-import { ProfileSettingsPage } from './components/ProfileSettingsPage';
+import RootLayout from "@/RootLayout";
+import SignInPage from "@/components/SignInPage";
+import SignupPage from "@/components/SignUpPage";
+import PrimaryLayout from "@/PrimaryLayout";
+import ChatsPage from "@/components/ChatsPage";
+import ChatWrapper from "@/components/ChatWrapper";
+import { ProfileSettingsPage } from "@/components/ProfileSettingsPage";
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     Component: RootLayout,
     children: [
       {
-        path: 'sign-in',
+        path: "sign-in",
         Component: SignInPage
       },
       {
-        path: 'sign-up',
+        path: "sign-up",
         Component: SignupPage
       },
       {
@@ -32,15 +32,15 @@ const router = createBrowserRouter([
             Component: ChatsPage
           },
           {
-            path: 'chats',
+            path: "chats",
             Component: ChatsPage
           },
           {
-            path: 'chats/:conversationId',
+            path: "chats/:conversationId",
             Component: ChatWrapper
           },
           {
-            path: 'profile',
+            path: "profile",
             Component: ProfileSettingsPage
           }
         ]
@@ -49,6 +49,6 @@ const router = createBrowserRouter([
   }
 ]);
 
-const root = document.getElementById('root') as HTMLElement;
+const root = document.getElementById("root") as HTMLElement;
 
 ReactDOM.createRoot(root).render(<RouterProvider router={router} />);

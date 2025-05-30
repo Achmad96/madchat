@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import AddRecipientButton from '@/components/AddConversationButton';
-import { useAuth } from '@/contexts/AuthContext';
-import { Link } from 'react-router';
-import { socket } from '@/services/SocketService';
-import { fetchData } from '@/services/FetchService';
+import { useEffect, useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import AddRecipientButton from "@/components/AddConversationButton";
+import { useAuth } from "@/contexts/AuthContext";
+import { Link } from "react-router";
+import { socket } from "@/services/SocketService";
+import { fetchData } from "@/services/FetchService";
 
 interface Conversation {
   id: string;
@@ -49,16 +49,16 @@ export default function Chats() {
   useEffect(() => {
     const fetchConversations = async () => {
       try {
-        const response = await fetchData('conversations', {
-          method: 'GET'
+        const response = await fetchData("conversations", {
+          method: "GET"
         });
         if (!response.ok) {
-          throw new Error('Failed to fetch conversations');
+          throw new Error("Failed to fetch conversations");
         }
         const { data } = await response.json();
         setConversations(data);
       } catch (error) {
-        console.error('Error fetching conversations:', error);
+        console.error("Error fetching conversations:", error);
       } finally {
         setIsLoading(false);
       }

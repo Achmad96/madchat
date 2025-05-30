@@ -1,19 +1,19 @@
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { useForm } from 'react-hook-form';
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { toast } from 'sonner';
-import { z } from 'zod';
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
-import { API_URL } from '@/configs/API';
-import { useAuth } from '@/contexts/AuthContext';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useForm } from "react-hook-form";
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import { z } from "zod";
+import { useState } from "react";
+import { useNavigate } from "react-router";
+import { API_URL } from "@/configs/API";
+import { useAuth } from "@/contexts/AuthContext";
 
 const FormSchema = z.object({
-  username: z.string().min(1, { message: 'Username is required' }),
-  password: z.string().min(1, { message: 'Password is required' })
+  username: z.string().min(1, { message: "Username is required" }),
+  password: z.string().min(1, { message: "Password is required" })
 });
 
 type FormData = z.infer<typeof FormSchema>;
@@ -26,8 +26,8 @@ export default function SignInPage() {
   const form = useForm<FormData>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      username: '',
-      password: ''
+      username: "",
+      password: ""
     }
   });
 
@@ -35,9 +35,9 @@ export default function SignInPage() {
     try {
       setIsLoading(true);
       const response = await fetch(`${API_URL}/api/auth/login`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(data)
       });
@@ -45,20 +45,20 @@ export default function SignInPage() {
       const responseData = await response.json();
 
       if (!response.ok) {
-        throw new Error(responseData.error || 'Login failed');
+        throw new Error(responseData.error || "Login failed");
       }
 
       login(responseData.user, responseData.token);
 
-      toast.success('Login successful', {
-        description: 'Welcome back!'
+      toast.success("Login successful", {
+        description: "Welcome back!"
       });
 
-      navigate('/');
+      navigate("/");
     } catch (error) {
-      console.error('Error:', error);
-      toast.error('Login failed', {
-        description: error instanceof Error ? error.message : 'Please check your credentials and try again.'
+      console.error("Error:", error);
+      toast.error("Login failed", {
+        description: error instanceof Error ? error.message : "Please check your credentials and try again."
       });
     } finally {
       setIsLoading(false);
@@ -113,7 +113,7 @@ export default function SignInPage() {
             </CardContent>
             <CardFooter className="flex justify-end">
               <Button type="submit" disabled={isLoading}>
-                {isLoading ? 'Signing in...' : 'Sign in'}
+                {isLoading ? "Signing in..." : "Sign in"}
               </Button>
             </CardFooter>
           </form>

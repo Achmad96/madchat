@@ -1,9 +1,9 @@
-import { Card } from '@/components/ui/card';
-import { IoIosArrowRoundBack } from 'react-icons/io';
-import { Link } from 'react-router';
-import type { RecipientType } from '@/types';
-import ChatAvatar from '@/components/ChatAvatar';
-import { bufferArrayToBase64 } from '@/lib/utils';
+import { Card } from "@/components/ui/card";
+import { IoIosArrowRoundBack } from "react-icons/io";
+import { Link } from "react-router";
+import type { RecipientType } from "@/types";
+import ChatAvatar from "@/components/ChatAvatar";
+import { bufferArrayToBase64 } from "@/lib/utils";
 
 export default function RecipientCard({ recipient }: { recipient: RecipientType }) {
   let avatar = undefined;

@@ -1,37 +1,37 @@
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { useForm } from 'react-hook-form';
-import { Form, FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from '@/components/ui/form';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { toast } from 'sonner';
-import { z } from 'zod';
-import { useState } from 'react';
-import { API_URL } from '@/configs/API';
-import { useNavigate } from 'react-router';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useForm } from "react-hook-form";
+import { Form, FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from "@/components/ui/form";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import { z } from "zod";
+import { useState } from "react";
+import { API_URL } from "@/configs/API";
+import { useNavigate } from "react-router";
 
 const FormSchema = z.object({
   username: z
     .string()
     .min(5, {
-      message: 'Username must be at least 5 characters.'
+      message: "Username must be at least 5 characters."
     })
     .max(20, {
-      message: 'Username cannot exceed 20 characters.'
+      message: "Username cannot exceed 20 characters."
     }),
   display_name: z
     .string()
     .max(30, {
-      message: 'Display name cannot exceed 30 characters.'
+      message: "Display name cannot exceed 30 characters."
     })
     .optional(),
   password: z
     .string()
     .min(8, {
-      message: 'Password must be at least 8 characters.'
+      message: "Password must be at least 8 characters."
     })
     .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, {
-      message: 'Password must contain at least one letter and one number.'
+      message: "Password must contain at least one letter and one number."
     }),
   avatar: z.instanceof(File).optional()
 });
@@ -45,16 +45,16 @@ export default function SignUpPage() {
   const form = useForm<FormData>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      username: '',
-      display_name: '',
-      password: ''
+      username: "",
+      display_name: "",
+      password: ""
     }
   });
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      form.setValue('avatar', file);
+      form.setValue("avatar", file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setAvatarPreview(reader.result as string);
@@ -66,36 +66,36 @@ export default function SignUpPage() {
   async function onSubmit(data: FormData) {
     try {
       const formData = new FormData();
-      formData.append('username', data.username);
-      formData.append('password', data.password);
+      formData.append("username", data.username);
+      formData.append("password", data.password);
 
       if (data.display_name) {
-        formData.append('display_name', data.display_name);
+        formData.append("display_name", data.display_name);
       }
 
       if (data.avatar) {
-        formData.append('avatar', data.avatar);
+        formData.append("avatar", data.avatar);
       }
 
       const response = await fetch(`${API_URL}/api/auth/register`, {
-        method: 'POST',
+        method: "POST",
         body: formData
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        toast.error('Error creating account', {
-          description: errorData.message || 'An error occurred while creating your account.',
+        toast.error("Error creating account", {
+          description: errorData.message || "An error occurred while creating your account.",
           duration: 3000
         });
         return;
       }
 
-      toast.success('Account created successfully!');
-      navigate('/sign-in', { replace: true });
+      toast.success("Account created successfully!");
+      navigate("/sign-in", { replace: true });
     } catch (error) {
-      toast.error('Error creating account', {
-        description: 'An error occurred while creating your account.',
+      toast.error("Error creating account", {
+        description: "An error occurred while creating your account.",
         duration: 3000
       });
     }

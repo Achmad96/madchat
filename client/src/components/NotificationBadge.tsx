@@ -1,8 +1,8 @@
-import { useNotifications } from '@/contexts/NotificationContext';
-import { Bell } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Link } from 'react-router';
+import { useNotifications } from "@/contexts/NotificationContext";
+import { Bell } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Link } from "react-router";
 
 export function NotificationBadge() {
   const { notifications, markAsRead, clearNotifications } = useNotifications();
@@ -41,11 +41,11 @@ export function NotificationBadge() {
                   <DropdownMenuItem className="cursor-pointer">
                     <div className="flex flex-col w-full">
                       <div className="flex justify-between items-center">
-                        <span className="font-medium">{msgs[0].display_name || msgs[0].username || 'Someone'}</span>
+                        <span className="font-medium">{msgs[0].display_name || msgs[0].username || "Someone"}</span>
                         {/* <span className="text-xs text-muted-foreground">{formatDistanceToNow(new Date(msgs[0].created_at), { addSuffix: true })}</span> */}
                       </div>
                       <p className="text-sm text-muted-foreground truncate">
-                        {msgs.length} new message{msgs.length > 1 ? 's' : ''}
+                        {msgs.length} new message{msgs.length > 1 ? "s" : ""}
                       </p>
                     </div>
                   </DropdownMenuItem>

@@ -1,9 +1,9 @@
-import { useRef, type FormEvent, type KeyboardEvent } from 'react';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { useParams } from 'react-router';
-import { Send } from 'lucide-react';
-import { fetchData } from '@/services/FetchService';
+import { useRef, type FormEvent, type KeyboardEvent } from "react";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { useParams } from "react-router";
+import { Send } from "lucide-react";
+import { fetchData } from "@/services/FetchService";
 
 export default function InputChat() {
   const { conversationId } = useParams();
@@ -12,22 +12,22 @@ export default function InputChat() {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const content = formData.get('message') as string;
+    const content = formData.get("message") as string;
     try {
-      const response = await fetchData('messages', {
-        method: 'POST',
+      const response = await fetchData("messages", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({ conversation_id: conversationId, content })
       });
       if (!response.ok) {
-        throw new Error('Failed to send message');
+        throw new Error("Failed to send message");
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
-    ref.current!.value = '';
+    ref.current!.value = "";
   };
 
   return (
@@ -40,7 +40,7 @@ export default function InputChat() {
         autoComplete="off"
         className="resize-none w-full rounded-none rounded-b-xl"
         onKeyDown={(event: KeyboardEvent<HTMLTextAreaElement>) => {
-          if (event.key === 'Enter' && !event.shiftKey) {
+          if (event.key === "Enter" && !event.shiftKey) {
             event.preventDefault();
             ref.current?.form?.requestSubmit();
           }
