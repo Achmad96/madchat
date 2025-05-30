@@ -9,15 +9,15 @@ class ParticipantModel {
    * @returns {Promise<Object>} - Created participant record
    */
   static async create(data) {
-    const db = await createConnection();
+    const database = await createConnection();
     try {
       const { id, conversationId } = data;
       const query = "INSERT INTO participant (id, conversation_id) VALUES (?, ?)";
-      await db.execute(query, [id, conversationId]);
-      closeConnection(db);
+      await database.execute(query, [id, conversationId]);
+      closeConnection(database);
       return data;
     } catch (error) {
-      closeConnection(db);
+      closeConnection(database);
       console.error("Error adding participant:", error);
       throw error;
     }
@@ -29,9 +29,9 @@ class ParticipantModel {
    * @returns {Promise<Array>} - Array of participants
    */
   static async findByConversationId(conversationId) {
-    const db = await createConnection();
+    const database = await createConnection();
     try {
-      const [rows] = await db.execute(
+      const [rows] = await database.execute(
         `SELECT p.id AS participant_id,
         u.username,
         u.display_name,
@@ -41,11 +41,11 @@ class ParticipantModel {
         WHERE p.conversation_id = ?`,
         [conversationId]
       );
-      closeConnection(db);
+      closeConnection(database);
       const participants = rows.map((row) => ({ ...row, id: row.participant_id, participant_id: undefined }));
       return participants;
     } catch (error) {
-      closeConnection(db);
+      closeConnection(database);
       console.error("Error finding conversation participants:", error);
       throw error;
     }
@@ -57,13 +57,13 @@ class ParticipantModel {
    * @returns {Promise<Array>} - Array of conversation IDs
    */
   static async findConversationsByUserId(userId) {
-    const db = await createConnection();
+    const database = await createConnection();
     try {
-      const [rows] = await db.execute("SELECT conversation_id FROM participant WHERE id = ?", [userId]);
-      closeConnection(db);
+      const [rows] = await database.execute("SELECT conversation_id FROM participant WHERE id = ?", [userId]);
+      closeConnection(database);
       return rows.map((row) => row.conversation_id);
     } catch (error) {
-      closeConnection(db);
+      closeConnection(database);
       console.error("Error finding user conversations:", error);
       throw error;
     }
@@ -76,13 +76,13 @@ class ParticipantModel {
    * @returns {Promise<boolean>} - True if user is in conversation, false otherwise
    */
   static async isUserInConversation(userId, conversationId) {
-    const db = await createConnection();
+    const database = await createConnection();
     try {
-      const [rows] = await db.execute("SELECT COUNT(*) AS count FROM participant WHERE id = ? AND conversation_id = ?", [userId, conversationId]);
-      closeConnection(db);
+      const [rows] = await database.execute("SELECT COUNT(*) AS count FROM participant WHERE id = ? AND conversation_id = ?", [userId, conversationId]);
+      closeConnection(database);
       return rows[0].count > 0;
     } catch (error) {
-      closeConnection(db);
+      closeConnection(database);
       console.error("Error checking user in conversation:", error);
       throw error;
     }
@@ -95,13 +95,13 @@ class ParticipantModel {
    * @returns {Promise<boolean>} - True if removal was successful
    */
   static async remove(conversationId, userId) {
-    const db = await createConnection();
+    const database = await createConnection();
     try {
-      const [result] = await db.execute("DELETE FROM participant WHERE conversation_id = ? AND id = ?", [conversationId, userId]);
-      closeConnection(db);
+      const [result] = await database.execute("DELETE FROM participant WHERE conversation_id = ? AND id = ?", [conversationId, userId]);
+      closeConnection(database);
       return result.affectedRows > 0;
     } catch (error) {
-      closeConnection(db);
+      closeConnection(database);
       console.error("Error removing participant:", error);
       throw error;
     }

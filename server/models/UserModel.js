@@ -9,7 +9,7 @@ class UserModel {
    * @returns {Promise<Object>} - Created user object
    */
   static async create(userData) {
-    const db = await createConnection();
+    const database = await createConnection();
     try {
       const { username, password, display_name = null, avatar = null } = userData;
       const existingUser = await this.findByUsername(username);
@@ -19,15 +19,12 @@ class UserModel {
       const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(password, saltRounds);
       const userId = uuidv4();
-      const query = `
-        INSERT INTO user (id, username, password, display_name, avatar)
-        VALUES (?, ?, ?, ?, ?)
-      `;
-      await db.execute(query, [userId, username, hashedPassword, display_name, avatar]);
-      closeConnection(db);
+      const query = "INSERT INTO user (id, username, password, display_name, avatar) VALUES (?, ?, ?, ?, ?)";
+      await database.execute(query, [userId, username, hashedPassword, display_name, avatar]);
+      closeConnection(database);
       return this.findById(userId);
     } catch (error) {
-      closeConnection(db);
+      closeConnection(database);
       console.error("Error creating user:", error);
       throw error;
     }
@@ -39,13 +36,13 @@ class UserModel {
    * @returns {Promise<Object|null>} - User object or null if not found
    */
   static async findById(id) {
-    const db = await createConnection();
+    const database = await createConnection();
     try {
-      const [rows] = await db.execute("SELECT id, username, display_name, avatar, created_at, updated_at FROM user WHERE id = ?", [id]);
-      closeConnection(db);
+      const [rows] = await database.execute("SELECT id, username, display_name, avatar, created_at, updated_at FROM user WHERE id = ?", [id]);
+      closeConnection(database);
       return rows.length ? rows[0] : null;
     } catch (error) {
-      closeConnection(db);
+      closeConnection(database);
       console.error("Error finding user by ID:", error);
       throw error;
     }
@@ -57,14 +54,14 @@ class UserModel {
    * @returns {Promise<Object|null>} - User object or null if not found
    */
   static async findByUsername(username) {
-    const db = await createConnection();
+    const database = await createConnection();
     try {
-      const [rows] = await db.execute("SELECT id, username, display_name, avatar, created_at, updated_at FROM user WHERE username = ?", [username]);
-      closeConnection(db);
+      const [rows] = await database.execute("SELECT id, username, display_name, avatar, created_at, updated_at FROM user WHERE username = ?", [username]);
+      closeConnection(database);
 
       return rows.length ? rows[0] : null;
     } catch (error) {
-      closeConnection(db);
+      closeConnection(database);
       console.error("Error finding user by username:", error);
       throw error;
     }
@@ -77,10 +74,9 @@ class UserModel {
    * @returns {Promise<Object|null>} - User object if credentials are valid, null otherwise
    */
   static async verifyCredentials(username, password) {
-    const db = await createConnection();
+    const database = await createConnection();
     try {
-      const [rows] = await db.execute("SELECT id, username, password AS hashed_password, display_name, avatar, created_at, updated_at FROM user WHERE username = ?", [username]);
-
+      const [rows] = await database.execute("SELECT id, username, password AS hashed_password, display_name, avatar, created_at, updated_at FROM user WHERE username = ?", [username]);
       if (!rows.length) {
         return null;
       }
@@ -90,10 +86,10 @@ class UserModel {
         return null;
       }
       const { hashed_password, ...userWithoutPassword } = user;
-      closeConnection(db);
+      closeConnection(database);
       return userWithoutPassword;
     } catch (error) {
-      closeConnection(db);
+      closeConnection(database);
       console.error("Error verifying credentials:", error);
       throw error;
     }
@@ -106,7 +102,7 @@ class UserModel {
    * @returns {Promise<Object>} - Updated user object
    */
   static async update(id, userData) {
-    const db = await createConnection();
+    const database = await createConnection();
     try {
       const { display_name, avatar } = userData;
       let query = "UPDATE user SET updated_at = current_timestamp()";
@@ -121,11 +117,11 @@ class UserModel {
       }
       query += " WHERE id = ?";
       params.push(id);
-      await db.execute(query, params);
-      closeConnection(db);
+      await database.execute(query, params);
+      closeConnection(database);
       return this.findById(id);
     } catch (error) {
-      closeConnection(db);
+      closeConnection(database);
       console.error("Error updating user:", error);
       throw error;
     }
@@ -138,15 +134,15 @@ class UserModel {
    * @returns {Promise<boolean>} - True if password was updated
    */
   static async updatePassword(id, newPassword) {
-    const db = await createConnection();
+    const database = await createConnection();
     try {
       const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
-      await db.execute("UPDATE user SET password = ?, updated_at = current_timestamp() WHERE id = ?", [hashedPassword, id]);
-      closeConnection(db);
+      await database.execute("UPDATE user SET password = ?, updated_at = current_timestamp() WHERE id = ?", [hashedPassword, id]);
+      closeConnection(database);
       return true;
     } catch (error) {
-      closeConnection(db);
+      closeConnection(database);
       console.error("Error updating password:", error);
       throw error;
     }
@@ -158,13 +154,13 @@ class UserModel {
    * @returns {Promise<boolean>} - True if user was deleted
    */
   static async delete(id) {
-    const db = await createConnection();
+    const database = await createConnection();
     try {
-      const [result] = await db.execute("DELETE FROM user WHERE id = ?", [id]);
-      closeConnection(db);
+      const [result] = await database.execute("DELETE FROM user WHERE id = ?", [id]);
+      closeConnection(database);
       return result.affectedRows > 0;
     } catch (error) {
-      closeConnection(db);
+      closeConnection(database);
       console.error("Error deleting user:", error);
       throw error;
     }
@@ -176,13 +172,13 @@ class UserModel {
    * @returns {Promise<Array>} - List of matching users
    */
   static async search(query) {
-    const db = await createConnection();
+    const database = await createConnection();
     try {
-      const [rows] = await db.execute("SELECT id, username, display_name, avatar, created_at, updated_at FROM user WHERE username LIKE ? OR display_name LIKE ?", [`${query}%`, `${query}%`]);
-      closeConnection(db);
+      const [rows] = await database.execute("SELECT id, username, display_name, avatar, created_at, updated_at FROM user WHERE username LIKE ? OR display_name LIKE ?", [`${query}%`, `${query}%`]);
+      closeConnection(database);
       return rows;
     } catch (error) {
-      closeConnection(db);
+      closeConnection(database);
       console.error("Error searching users:", error);
       throw error;
     }

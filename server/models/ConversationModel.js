@@ -9,20 +9,20 @@ class ConversationModel {
    * @returns {Promise<Object>} - Created conversation object
    */
   static async create(data) {
-    const db = await createConnection();
+    const database = await createConnection();
     try {
       const { typeId, creatorId } = data;
       const conversationId = uuidv4();
       const query = "INSERT INTO conversation (id, type_id, creator_id) VALUES (?, ?, ?)";
-      const result = await db.execute(query, [conversationId, typeId, creatorId]);
-      closeConnection(db);
+      await database.execute(query, [conversationId, typeId, creatorId]);
+      closeConnection(database);
       return {
         id: conversationId,
         type_id: typeId,
         creator_id: creatorId
       };
     } catch (error) {
-      closeConnection(db);
+      closeConnection(database);
       console.error("Error creating conversation:", error);
       throw error;
     }
@@ -35,9 +35,9 @@ class ConversationModel {
    * @returns {Promise<Object|null>} - Conversation object or null if not found
    */
   static async findById(conversationId, userId) {
-    const db = await createConnection();
+    const database = await createConnection();
     try {
-      const [rows] = await db.execute(
+      const [rows] = await database.execute(
         `SELECT c.id AS conversation_id, c.type_id, creator_id, c.created_at, c.updated_at,
         p.id, u.username, u.display_name, u.avatar
         FROM participant p
@@ -47,7 +47,7 @@ class ConversationModel {
         AND c.id = ?`,
         [userId, conversationId]
       );
-      closeConnection(db);
+      closeConnection(database);
       const conversation = rows.reduce((acc, row) => {
         if (!acc) {
           acc = {
@@ -71,7 +71,7 @@ class ConversationModel {
       }, null);
       return rows.length ? conversation : null;
     } catch (error) {
-      closeConnection(db);
+      closeConnection(database);
       console.error("Error finding conversation by ID:", error);
       throw error;
     }
@@ -83,18 +83,18 @@ class ConversationModel {
    * @returns {Promise<Array>} - Conversation object or null if not found
    */
   static async findByUserId(userId) {
-    const db = await createConnection();
+    const database = await createConnection();
     try {
-      const [rows] = await db.execute(
+      const [rows] = await database.execute(
         `SELECT c.id AS conversation_id, c.type_id, creator_id, c.created_at, c.updated_at,
-                p.id, u.username, u.display_name, u.avatar
+        p.id, u.username, u.display_name, u.avatar
         FROM participant p
         INNER JOIN conversation c ON p.conversation_id = c.id
         INNER JOIN user u ON p.id = u.id
         WHERE c.id IN (SELECT p.conversation_id FROM participant p WHERE p.id = ?)`,
         [userId]
       );
-      closeConnection(db);
+      closeConnection(database);
       if (!rows.length) return null;
       const conversations = rows.reduce((acc, row) => {
         let convo = acc.find((c) => c.id === row.conversation_id);
@@ -120,7 +120,7 @@ class ConversationModel {
       }, []);
       return conversations.length ? conversations : null;
     } catch (error) {
-      closeConnection(db);
+      closeConnection(database);
       console.error("Error finding conversation by participants:", error);
       throw error;
     }
@@ -132,13 +132,13 @@ class ConversationModel {
    * @returns {Promise<boolean>} - True if update was successful
    */
   static async updateTimestamp(id) {
-    const db = await createConnection();
+    const database = await createConnection();
     try {
-      await db.execute("UPDATE conversation SET updated_at = current_timestamp() WHERE id = ?", [id]);
-      closeConnection(db);
+      await database.execute("UPDATE conversation SET updated_at = current_timestamp() WHERE id = ?", [id]);
+      closeConnection(database);
       return true;
     } catch (error) {
-      closeConnection(db);
+      closeConnection(database);
       console.error("Error updating conversation timestamp:", error);
       throw error;
     }
@@ -150,14 +150,14 @@ class ConversationModel {
    * @returns {Promise<boolean>} - True if deletion was successful
    */
   static async delete(id) {
-    const db = await createConnection();
+    const database = await createConnection();
     try {
-      await db.execute("DELETE FROM message WHERE conversation_id = ?", [id]);
-      const [result] = await db.execute("DELETE FROM conversation WHERE id = ?", [id]);
-      closeConnection(db);
+      await database.execute("DELETE FROM message WHERE conversation_id = ?", [id]);
+      const [result] = await database.execute("DELETE FROM conversation WHERE id = ?", [id]);
+      closeConnection(database);
       return result.affectedRows > 0;
     } catch (error) {
-      closeConnection(db);
+      closeConnection(database);
       console.error("Error deleting conversation:", error);
       throw error;
     }
@@ -171,9 +171,9 @@ class ConversationModel {
    * @return {Promise<Array>} - Array of conversations
    */
   static async getConversationsWithPagination(userId, limit = 50, offset = 0) {
-    const db = await createConnection();
+    const database = await createConnection();
     try {
-      const [rows] = await db.execute(
+      const [rows] = await database.execute(
         `SELECT c.id, c.sender_id, c.recipient_id, c.created_at, c.updated_at,
           u1.username as sender_username, u1.display_name as sender_display_name, u1.avatar as sender_avatar,
           u2.username as recipient_username, u2.display_name as recipient_display_name, u2.avatar as recipient_avatar
@@ -185,10 +185,10 @@ class ConversationModel {
           LIMIT ? OFFSET ?`,
         [userId, userId, limit, offset]
       );
-      closeConnection(db);
+      closeConnection(database);
       return rows;
     } catch (error) {
-      closeConnection(db);
+      closeConnection(database);
       console.error("Error getting conversations with pagination:", error);
       throw error;
     }
