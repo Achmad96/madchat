@@ -3,34 +3,21 @@ import { jwtDecode } from "jwt-decode";
 import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { fetchData } from "@/services/FetchService";
-
-interface User {
-  id: string;
-  username: string;
-  display_name?: string;
-  avatar?: string;
-}
-
-interface JwtPayload {
-  id: string;
-  username: string;
-  iat: number;
-  exp: number;
-}
+import type { JwtPayload, UserType } from "@/types";
 
 interface AuthContextType {
-  user: User | null;
+  user: UserType | null;
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (userData: User, token: string) => void;
+  login: (userData: UserType, token: string) => void;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserType | null>(null);
   const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -77,7 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     validateToken();
   }, [token]);
 
-  const login = (userData: User, token: string) => {
+  const login = (userData: UserType, token: string) => {
     setUser(userData);
     setToken(token);
     setIsAuthenticated(true);

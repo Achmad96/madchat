@@ -4,7 +4,7 @@ type UserType = {
   display_name: string;
   avatar: {
     data: ArrayBuffer;
-    type: 'Buffer';
+    type: "Buffer";
   };
 };
 
@@ -13,9 +13,16 @@ type RecipientType = {
   name: string;
   avatar: {
     data: ArrayBuffer;
-    type: 'Buffer';
+    type: "Buffer";
   };
 };
+
+interface JwtPayload {
+  id: string;
+  username: string;
+  iat: number;
+  exp: number;
+}
 
 type ConversationType = {
   id: number;
@@ -24,4 +31,4 @@ type ConversationType = {
   type_id: number;
   recipients: Array<UserType>;
 };
-export type { UserType, RecipientType, ConversationType };
+export type { UserType, RecipientType, JwtPayload, ConversationType };
