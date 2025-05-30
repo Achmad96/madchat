@@ -178,7 +178,7 @@ class UserModel {
   static async search(query) {
     const db = await createConnection();
     try {
-      const [rows] = await db.execute("SELECT id, username, display_name, avatar, created_at, updated_at FROM user WHERE username LIKE ? OR display_name LIKE ?", [`%${query}%`, `%${query}%`]);
+      const [rows] = await db.execute("SELECT id, username, display_name, avatar, created_at, updated_at FROM user WHERE username LIKE ? OR display_name LIKE ?", [`${query}%`, `${query}%`]);
       closeConnection(db);
       return rows;
     } catch (error) {
